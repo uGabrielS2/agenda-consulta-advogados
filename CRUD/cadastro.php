@@ -4,19 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro</title>
-    <script defer src="script.js"></script>
+    <script defer src="javascript/script.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <style>
-        .form-container{
-    max-width: 350px;
-    padding: 1rem;
-}
-    body{
-        background-image: url("assets/background.png");
-        background-position: 55% 15%;
-    }
-    </style>
+    <link rel="stylesheet" href="style/styleLogin.css">
 </head> 
 <body>
     <div class="container-fluid" id="bodyForm">
@@ -25,6 +16,11 @@
                 <div id="tela" class="p-4 rounded shadow">
                     <form method="POST" class="validationCustom01" action="verify/verifyCadastrar.php" data-parsley-validate>
                     <h3 class="text-center mb-4">Fazer Cadastro</h3>
+                    <?php
+                        if (isset($_GET['error']) && $_GET['error'] == 'campos_vazios') {
+                            echo '<div class="alert alert-danger" role="alert">Um ou mais não foram preenchidos! Por favor preencha os campos abaixo.</div>';
+                        }
+                        ?>
                     <?php
                         if (isset($_GET['error'])) {
                             if ($_GET['error'] == 'usuario_existente') {
@@ -35,13 +31,14 @@
                         }
                         ?>
                         <div class="mb-3">
-                          <label class="fs-6" for="usuario">Nome de usuário</label>
+                          <label class="fs-6" for="usuario">Nome de usuário</label><span>*</span>
                             <input class="form-control" id="usuario" name="usuario" type="text" placeholder="Usuário" required> 
                         
                         </div>
                         <div class="mb-3">
-                        <label class="fs-6" for="senha">Senha</label>
+                        <label class="fs-6" for="senha">Senha</label><span>*</span>
                             <input class="form-control" id="senha" name="senha" type="password" placeholder="Senha" required>
+                            <div class="form-text">A senha deve conter ao menos 6 caracteres</div>
                         </div>
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <input class="btn btn-primary" type="submit" value="Cadastrar" name="submit"> 

@@ -6,6 +6,12 @@ if (isset($_SESSION["usuario"])) {
     exit();
 }
 
+if(empty($_POST['usuario']) && empty($_POST['senha'])){
+
+    header('Location: ../login.php?error=credenciais_invalidas');
+
+}
+
 if (isset($_POST['usuario']) && !empty($_POST['usuario']) && isset($_POST['senha']) && !empty($_POST['senha'])) {
     require '../conexao.php';
 

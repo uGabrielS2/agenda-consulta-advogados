@@ -15,93 +15,73 @@ require 'conexao.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página Inicial</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <style>
-
-.ModalSideBar{
-width: 300px;
-}
-
-
-</style>
+    <link rel="stylesheet" href="style/style.css">
 </head>
-<body>
+<body class="h-100">
     <div class="container my-4">
-    <h1 class="text-center">Seja bem-vindo, <?php echo $_SESSION['usuario']; ?></h1>
+        <h1 class="py-2">Página Inicial</h1>
+        <h1 class="text-center">Seja bem-vindo, <?php echo $_SESSION['usuario']; ?></h1>
+        <hr class="m-4">
         <div class="row my-4">
             <div class="col-md-6">
-                <div class="card text-white bg-primary mb-3">
+                <div class="card text-white text-center bg-primary mb-3">
                     <div class="card-header">Clientes</div>
                     <div class="card-body">
-                        <h5 class="card-title">Número de Clientes</h5>
-                        <p class="card-text"><?php echo rand(50, 200); ?></p>
+                        <h5 class="card-title">Número de Clientes: <?php   
+                            $sql = "SELECT COUNT(*) AS total_clientes FROM clientes";
+                            $stmt = $conn->prepare($sql);
+                            $stmt->execute();
+                            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                            echo $result['total_clientes'];
+                            ?></h5>
+                        <p class="card-text"> 
+                        </p>
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card text-white bg-success mb-3">
+                <div class="card text-white text-center bg-success mb-3">
                     <div class="card-header">Agendamentos</div>
                     <div class="card-body">
-                        <h5 class="card-title">Número de Agendamentos</h5>
-                        <p class="card-text"><?php echo rand(100, 300); ?></p>
+                        <h5 class="card-title">Número de Agendamentos: <?php
+                            $sql = "SELECT COUNT(*) AS total_agenda FROM agendamentos";
+                            $stmt = $conn->prepare($sql);
+                            $stmt->execute();
+                            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                            echo $result['total_agenda'];
+                            ?></h5>
+                        <p class="card-text">
+                           
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row my-4">
-            <div class="col-12">
-                <h2>Relatório</h2>
-                <table class="table table-striped">
+        <div class="my-4">
+                <h2 class="m-1 p-1 mb-3">Relatório:</h2>
+                <table class="table table-striped m-1">
                     <thead>
                         <tr>
                             <th>Nome</th>
-                            <th>Telefone</th>
-                            <th>Email</th>
-                            <th>CPF</th>
-                            <th>Agendamentos</th>
+                            <th>Quant. Agendamentos</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php 
-                        $nomes = ["Ana", "Bruno", "Carlos", "Diana", "Eduardo"];
-                        $sobrenomes = ["Silva", "Santos", "Oliveira", "Pereira", "Costa"];
-                        $dominios = ["example.com", "test.com", "mail.com", "domain.com"];
-                        
-                        function gerarTelefone() {
-                            return sprintf("(%02d) %05d-%04d", rand(10, 99), rand(10000, 99999), rand(1000, 9999));
-                        }
-
-                        function gerarCPF() {
-                            return sprintf("%03d.%03d.%03d-%02d", rand(100, 999), rand(100, 999), rand(100, 999), rand(10, 99));
-                        }
-
-                        $clientes = [];
-                        for ($i = 0; $i < 10; $i++) {
-                            $nome = $nomes[array_rand($nomes)] . " " . $sobrenomes[array_rand($sobrenomes)];
-                            $telefone = gerarTelefone();
-                            $email = strtolower(str_replace(" ", ".", $nome)) . "@" . $dominios[array_rand($dominios)];
-                            $cpf = gerarCPF();
-                            $agendamentos = rand(1, 20);
-                            $clientes[] = [
-                                'nome' => $nome,
-                                'telefone' => $telefone,
-                                'email' => $email,
-                                'cpf' => $cpf,
-                                'agendamentos' => $agendamentos
-                            ];
-                        }
-
-                        usort($clientes, function($a, $b) {
-                            return $b['agendamentos'] - $a['agendamentos'];
-                        });
-
-                        foreach ($clientes as $cliente) {
-                            echo "<tr>
-                                    <td>{$cliente['nome']}</td>
-                                    <td>{$cliente['telefone']}</td>
-                                    <td>{$cliente['email']}</td>
-                                    <td>{$cliente['cpf']}</td>
-                                    <td>{$cliente['agendamentos']}</td>
-                                  </tr>";
+                        <?php
+                        $sql = "
+                            SELECT clientes.nome, COUNT(agendamentos.id) AS total_agendamentos
+                            FROM clientes 
+                            JOIN agendamentos ON clientes.id = agendamentos.clientes_id
+                            GROUP BY clientes.nome
+                            ORDER BY total_agendamentos DESC";
+                        $stmt = $conn->prepare($sql);
+                        $stmt->execute();
+                        $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        foreach ($resultado as $linha) {
+                            echo '<tr>';
+                            echo '<td>' . $linha['nome'] . '</td>';
+                            echo '<td>' . $linha['total_agendamentos'] . '</td>';
+                            echo '</tr>';
                         }
                         ?>
                     </tbody>
@@ -112,3 +92,5 @@ width: 300px;
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
+<?php require 'footer.php';?>
+

@@ -2,7 +2,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$BD= "agendamento_consultas";
+$BD= "agendamento_advocacia";
 try {
   $conn = new PDO("mysql:host=$servername;dbname=$BD", $username, $password);
   $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

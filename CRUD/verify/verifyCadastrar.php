@@ -1,4 +1,11 @@
 <?php
+
+if(empty($_POST['usuario']) && empty($_POST['senha'])){
+
+    header('Location: ../cadastro.php?error=campos_vazios');
+
+}
+
 if (isset($_POST['usuario']) && isset($_POST['senha']) && !empty($_POST['usuario']) && !empty($_POST['senha'])) {
     session_start();
     require '../conexao.php';
