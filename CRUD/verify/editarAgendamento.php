@@ -12,7 +12,7 @@ if (!empty($_GET['id'])) {
 
     $sql = "SELECT * FROM agendamentos WHERE id = :id";
     $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':id', $id);
+    $stmt->bindValue(':id', $id);
     $stmt->execute();
     $agendamento = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -40,10 +40,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
 
         $sql = "UPDATE agendamentos SET data = :data, descricao = :descricao, clientes_id = :clientes_id WHERE id = :id";
         $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':data', $data);
-        $stmt->bindParam(':descricao', $descricao);
-        $stmt->bindParam(':clientes_id', $clientes_id);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindValue(':data', $data);
+        $stmt->bindValue(':descricao', $descricao);
+        $stmt->bindValue(':clientes_id', $clientes_id);
+        $stmt->bindValue(':id', $id);
 
         if ($stmt->execute()) {
             header("Location: ../telaAgendamentos.php?sucesso=atualizacao_realizada");

@@ -13,14 +13,14 @@ if (!empty($_GET['id'])) {
 
     $sql = "SELECT * FROM agendamentos WHERE id = :id";
     $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':id', $id);
+    $stmt->bindValue(':id', $id);
     $stmt->execute();
     $agendamento = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($agendamento) {
         $sql = "DELETE FROM agendamentos WHERE id = :id";
         $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindValue(':id', $id);
         if ($stmt->execute()) {
             header("Location: ../telaAgendamentos.php?sucesso=agendamento_deletado");
         } else {

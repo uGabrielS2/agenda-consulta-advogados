@@ -13,7 +13,7 @@ if (!empty($_GET['id'])) {
 
         $sql = "SELECT COUNT(*) FROM agendamentos WHERE clientes_id = :id";
         $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindValue(':id', $id);
         $stmt->execute();
         $agendamentosCount = $stmt->fetchColumn();
 
@@ -23,7 +23,7 @@ if (!empty($_GET['id'])) {
         } else {
             $sql = "DELETE FROM clientes WHERE id = :id";
             $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':id', $id);
+            $stmt->bindValue(':id', $id);
             $stmt->execute();
 
             header("Location: ../telaClientes.php?sucesso=cliente_deletado");
